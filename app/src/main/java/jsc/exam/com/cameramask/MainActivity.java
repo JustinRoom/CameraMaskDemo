@@ -146,6 +146,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void explainVersionInfoJson(String json) {
+        json = json.substring(1, json.length() - 1);
         try {
             JSONObject object = new JSONObject(json).getJSONObject("apkInfo");
             int versionCode = object.getInt("versionCode");

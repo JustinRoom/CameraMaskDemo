@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="PictureCameraLens"
-                android:textColor="@color/wheel_white" />
+                android:textColor="@android:color/white" />
 
             <RadioButton
                 android:id="@+id/radio_type_normal"
@@ -51,7 +51,7 @@
                 android:layout_marginLeft="@dimen/space_8"
                 android:layout_weight="1"
                 android:text="NormalCameraLens"
-                android:textColor="@color/wheel_white" />
+                android:textColor="@android:color/white" />
 
         </RadioGroup>
 
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="CircleCameraLens"
-                android:textColor="@color/wheel_white" />
+                android:textColor="@android:color/white" />
 
             <RadioButton
                 android:id="@+id/radio_shape_square"
@@ -76,7 +76,7 @@
                 android:layout_marginLeft="@dimen/space_8"
                 android:layout_weight="1"
                 android:text="SquareCameraLens"
-                android:textColor="@color/wheel_white" />
+                android:textColor="@android:color/white" />
 
         </RadioGroup>
 
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="BelowCameraLens"
-                android:textColor="@color/wheel_white" />
+                android:textColor="@android:color/white" />
 
             <RadioButton
                 android:id="@+id/radio_location_above"
@@ -101,7 +101,7 @@
                 android:layout_marginLeft="@dimen/space_8"
                 android:layout_weight="1"
                 android:text="AboveCameraLens"
-                android:textColor="@color/wheel_white" />
+                android:textColor="@android:color/white" />
 
         </RadioGroup>
 
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CameraLensTopMargin:"
-            android:textColor="@color/wheel_white"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
 
         <SeekBar
@@ -123,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextVerticalMargin:"
-            android:textColor="@color/wheel_white"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
 
         <SeekBar
