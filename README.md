@@ -34,7 +34,7 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 |:---:|:---|:---|:---|
 |clvCameraLensSizeRatio|float|相机镜头（或扫描框）大小占View宽度的百分比||
 |clvCameraLensTopMargin|dimension|相机镜头（或扫描框）与顶部的间距||
-|clvCameraLensShape|枚举(`square`、`circular`)|相机镜头（或扫描框）形状||
+|clvCameraLensShape|enum(`square`、`circular`)|相机镜头（或扫描框）形状||
 |clvCameraLens|reference|相机镜头图片资源||
 |clvMaskColor|color|相机镜头遮罩颜色||
 |clvBoxBorderColor|color|扫描框边的颜色||
@@ -46,7 +46,7 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 |clvTextColor|color|提示文字颜色||
 |clvTextSize|dimension|提示文字字体大小||
 |clvTextMathParent|boolean|提示文字是否填充View的宽度。true与View等宽，false与相机镜头（或扫描框）等宽。||
-|clvTextLocation|枚举(`belowCameraLens`、`aboveCameraLens`)|提示文字位于相机镜头（或扫描框）上方（或下方）||
+|clvTextLocation|enum(`belowCameraLens`、`aboveCameraLens`)|提示文字位于相机镜头（或扫描框）上方（或下方）||
 |clvTextVerticalMargin|dimension|提示文字与相机镜头（或扫描框）的间距||
 |clvTextLeftMargin|dimension|提示文字与View（或相机镜头或扫描框）的左间距||
 |clvTextRightMargin|dimension|提示文字与View（或相机镜头或扫描框）的右间距||
