@@ -65,18 +65,23 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 |cameraLensView|[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)|[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)所有属性|
 |scannerBarView|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)所有属性|
 
+### 3、usage
+| 组件 | 使用示例 |
+|:---:|:---|
+|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)|[ScannerBarViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/ScannerBarViewFragment.java)|
+|[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)|[CameraLensViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/CameraLensViewFragment.java)|
+|[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)|[CameraScannerMaskViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/CameraScannerMaskViewFragment.java)|
 
-
-### 3、Screenshots
-+ 3.1、[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
+### 4、Screenshots
++ 4.1、[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
 
 ![ScannerBarView](/output/shots/scanner_bar_view_s.png)
 
-+ 3.2、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
++ 4.2、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
 
 ![CameraLensView](/output/shots/camera_lens_view_s.png)
 
-+ 3.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
++ 4.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
 
 ![CameraScannerMaskView](/output/shots/camera_scanner_mask_view_s.png)
 
