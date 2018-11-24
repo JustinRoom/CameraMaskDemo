@@ -30,12 +30,12 @@ compile 'jsc.kit.cameramask:wheel-view:_latestVersion'
 ### Screenshots
 + [ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
 
-![ScannerBarView](/output/shots/scanner_bar_view.png)
+![ScannerBarView](/output/shots/scanner_bar_view_s.png)
 
 + [CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
 
-![CameraLensView](/output/shots/camera_lens_view.png)
+![CameraLensView](/output/shots/camera_lens_view_s.png)
 
 + [CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
 
-![CameraScannerMaskView](/output/shots/camera_scanner_mask_view.png)
+![CameraScannerMaskView](/output/shots/camera_scanner_mask_view_s.png)
