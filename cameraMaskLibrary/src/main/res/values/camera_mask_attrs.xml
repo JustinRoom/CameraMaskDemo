@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CameraLensView">
+        <!--相机镜头（或扫描框）大小占View宽度的百分比-->
+        <attr name="clvCameraLensSizeRatio" format="float"/>
+        <!--相机镜头（或扫描框）与顶部的间距-->
+        <attr name="clvCameraLensTopMargin" format="dimension"/>
+        <!--相机镜头（或扫描框）形状-->
+        <attr name="clvCameraLensShape">
+            <!--正方形-->
+            <enum name="square" value="0"/>
+            <!--圆形-->
+            <enum name="circular" value="1"/>
+        </attr>
+
+        <!--相机镜头图片-->
+        <attr name="clvCameraLens" format="reference"/>
+
+        <!--相机镜头遮罩颜色-->
+        <attr name="clvMaskColor" format="color"/>
+        <!--扫描框边的颜色-->
+        <attr name="clvBoxBorderColor" format="color"/>
+        <!--扫描框边的粗细-->
+        <attr name="clvBoxBorderWidth" format="dimension"/>
+        <!--扫描框四个角的颜色-->
+        <attr name="clvBoxAngleColor" format="color"/>
+        <!--扫描框四个角边的粗细-->
+        <attr name="clvBoxAngleBorderWidth" format="dimension"/>
+        <!--扫描框四个角边的长度-->
+        <attr name="clvBoxAngleLength" format="dimension"/>
+
+        <!--提示文字-->
+        <attr name="clvText" format="string"/>
+        <!--提示文字颜色-->
+        <attr name="clvTextColor" format="color"/>
+        <!--提示文字字体大小-->
+        <attr name="clvTextSize" format="dimension"/>
+        <!--提示文字是否填充View的宽度。true与View等宽，false与相机镜头（或扫描框）等宽。-->
+        <attr name="clvTextMathParent" format="boolean"/>
+        <!--提示文字位于相机镜头（或扫描框）上方（或下方）-->
+        <attr name="clvTextLocation">
+            <!--提示文字位于相机镜头（或扫描框）下方-->
+            <enum name="belowCameraLens" value="0"/>
+            <!--提示文字位于相机镜头（或扫描框）上方-->
+            <enum name="aboveCameraLens" value="1"/>
+        </attr>
+        <!--提示文字与相机镜头（或扫描框）的间距-->
+        <attr name="clvTextVerticalMargin" format="dimension"/>
+        <!--提示文字与View（或相机镜头或扫描框）的左间距-->
+        <attr name="clvTextLeftMargin" format="dimension"/>
+        <!--提示文字与View（或相机镜头或扫描框）的右间距-->
+        <attr name="clvTextRightMargin" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="ScannerBarView">
+        <attr name="sbvSrc" format="reference"/>
+    </declare-styleable>
+
+</resources>
