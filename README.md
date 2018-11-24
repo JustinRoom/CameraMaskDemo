@@ -12,12 +12,12 @@ Scan QRCode to download demo application below:
 
 ![](/output/camera_mask_demo_qr_code.png)
 
-### implementation
-+ Gradle
+### 1、implementation
++ 1.1、Gradle
 ```
 compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 ```
-+ Maven
++ 1.2、Maven
 ```
 <dependency>
   <groupId>jsc.kit.cameramask</groupId>
@@ -27,8 +27,8 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 </dependency>
 ```
 
-### attrs
-+ [CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
+### 2、attrs
++ 2.1、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
 
 | 名称 | 类型 | 描述 | 默认值 |
 |:---:|:---|:---|:---|
@@ -51,14 +51,14 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 |clvTextLeftMargin|dimension|提示文字与View（或相机镜头或扫描框）的左间距||
 |clvTextRightMargin|dimension|提示文字与View（或相机镜头或扫描框）的右间距||
 
-+ [ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
++ 2.2、[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
 
 | 名称 | 类型 | 描述 | 默认值 |
 |:---:|:---|:---|:---|
 |sbvSrc|reference|扫描条图片|[camera_mask_scanner_bar](/cameraMaskLibrary/src/main/res/drawable/camera_mask_scanner_bar.png)|
 
 
-+ [CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
++ 2.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
 
 | 子View | 类型 | 属性 |
 |:---:|:---|:---|
@@ -67,16 +67,16 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 
 
-### Screenshots
-+ [ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
+### 3、Screenshots
++ 3.1、[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
 
 ![ScannerBarView](/output/shots/scanner_bar_view_s.png)
 
-+ [CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
++ 3.2、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
 
 ![CameraLensView](/output/shots/camera_lens_view_s.png)
 
-+ [CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
++ 3.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
 
 ![CameraScannerMaskView](/output/shots/camera_scanner_mask_view_s.png)
 
