@@ -32,7 +32,7 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 | 名称 | 类型 | 默认值 |
 |:---:|:---|:---|
-|sbvSrc|图片资源|![](/cameraMaskLibrary/src/main/res/drawable/camera_mask_scanner_bar.png)|
+|sbvSrc|图片资源|[camera_mask_scanner_bar](/cameraMaskLibrary/src/main/res/drawable/camera_mask_scanner_bar.png)|
 
 
 
