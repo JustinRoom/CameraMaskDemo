@@ -29,6 +29,7 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 ### 2、attrs
 + 2.1、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
+
 | 名称 | 类型 | 描述 | 默认值 |
 |:---|:---|:---|:---|
 |clvCameraLensSizeRatio|float|相机镜头（或扫描框）大小占View宽度的百分比||
