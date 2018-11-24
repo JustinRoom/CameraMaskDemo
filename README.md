@@ -29,9 +29,8 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 ### 2、attrs
 + 2.1、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
-
 | 名称 | 类型 | 描述 | 默认值 |
-|:---:|:---|:---|:---|
+|:---|:---|:---|:---|
 |clvCameraLensSizeRatio|float|相机镜头（或扫描框）大小占View宽度的百分比||
 |clvCameraLensTopMargin|dimension|相机镜头（或扫描框）与顶部的间距||
 |clvCameraLensShape|enum(`square`、`circular`)|相机镜头（或扫描框）形状||
@@ -54,20 +53,20 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 + 2.2、[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
 
 | 名称 | 类型 | 描述 | 默认值 |
-|:---:|:---|:---|:---|
+|:---|:---|:---|:---|
 |sbvSrc|reference|扫描条图片|[camera_mask_scanner_bar](/cameraMaskLibrary/src/main/res/drawable/camera_mask_scanner_bar.png)|
 
 
 + 2.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
 
 | 子View | 类型 | 属性 |
-|:---:|:---|:---|
+|:---|:---|:---|
 |cameraLensView|[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)|[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)所有属性|
 |scannerBarView|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)所有属性|
 
 ### 3、usage
 | 组件 | 使用示例 |
-|:---:|:---|
+|:---|:---|
 |[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)|[ScannerBarViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/ScannerBarViewFragment.java)|
 |[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)|[CameraLensViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/CameraLensViewFragment.java)|
 |[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)|[CameraScannerMaskViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/CameraScannerMaskViewFragment.java)|
