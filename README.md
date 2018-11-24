@@ -27,6 +27,15 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 </dependency>
 ```
 
+### attrs
++ [ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
+
+| 名称 | 类型 | 默认值 |
+|:---:|:---|:---|
+|sbvSrc|图片资源|![](/cameraMaskLibrary/src/main/res/drawable/camera_mask_scanner_bar.png)|
+
+
+
 ### Screenshots
 + [ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)
 
