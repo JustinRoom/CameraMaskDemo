@@ -40,8 +40,8 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 ![CameraScannerMaskView](/output/shots/camera_scanner_mask_view_s.png)
 
-# LICENSE
-  Copyright [2018] [JustinRoom]
+### LICENSE
+   Copyright 2018 JustinRoom
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
