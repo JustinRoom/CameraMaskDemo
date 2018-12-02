@@ -82,6 +82,7 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 ![CameraLensView:picture](/output/shots/camera_lens_view_pic_s.png)
 ![CameraLensView:circle-shape](/output/shots/camera_lens_view_circle_s.png)
 ![CameraLensView:square-shape](/output/shots/camera_lens_view_square_s.png)
+![CameraLensView:crop-bitmap](/output/shots/camera_lens_view_bitmap_s.png)
 
 + 4.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java)
 
