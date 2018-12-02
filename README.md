@@ -91,7 +91,7 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 ##### version:0.1.1
 + 1、add method int CameraLensView、CameraScannerMaskView:  
-cropCameraLensRectBitmap(Bitmap src, boolean withRatio)
+`Bitmap cropCameraLensRectBitmap(Bitmap src, boolean withRatio)`
 
 ### LICENSE
 ```
