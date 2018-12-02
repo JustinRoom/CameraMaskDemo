@@ -1,6 +1,7 @@
 package jsc.kit.cameramask;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,6 +47,10 @@ public class CameraScannerMaskView extends FrameLayout {
         params.leftMargin = rect.left;
         params.topMargin = rect.top;
         scannerBarView.setLayoutParams(params);
+    }
+
+    public Bitmap cropCameraLensRectBitmap(Bitmap src) {
+        return cameraLensView.cropCameraLensRectBitmap(src);
     }
 
     public void start() {

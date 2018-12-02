@@ -325,6 +325,23 @@ public class CameraLensView extends View {
         }
     }
 
+    /**
+     *
+     * @param src src
+     * @return the bitmap of camera lens area
+     */
+    public Bitmap cropCameraLensRectBitmap(Bitmap src){
+        if (src == null)
+            return null;
+        int sw = src.getWidth();
+        int sh = src.getHeight();
+        int l = sw * cameraLensRect.left / getWidth();
+        int t = sh * cameraLensRect.top / getHeight();
+        int r = sw * cameraLensRect.right / getWidth();
+        int b = sh * cameraLensRect.bottom / getHeight();
+        return Bitmap.createBitmap(src, l, t, r - l, b - t);
+    }
+
 
     //getter and setter
     @NonNull

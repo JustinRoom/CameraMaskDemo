@@ -2,8 +2,7 @@
     <string name="app_name">CameraMask</string>
     <string name="app_update_content">
         当前版本更新内容:
-        \n1、add ScannerBarView
-        \n2、add CameraLensView
-        \n3、add CameraScannerMaskView
+        \n1、optimize CameraLensView:
+        \n add method -> cropCameraLensRectBitmap(Bitmap src)
     </string>
 </resources>
