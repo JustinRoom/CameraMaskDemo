@@ -87,6 +87,12 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 ![CameraScannerMaskView](/output/shots/camera_scanner_mask_view_s.png)
 
+### 5、release log
+
+##### version:0.1.1
++ 1、add method int CameraLensView、CameraScannerMaskView:  
+cropCameraLensRectBitmap(Bitmap src, boolean withRatio)
+
 ### LICENSE
 ```
    Copyright 2018 JustinRoom
