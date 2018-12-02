@@ -49,8 +49,8 @@ public class CameraScannerMaskView extends FrameLayout {
         scannerBarView.setLayoutParams(params);
     }
 
-    public Bitmap cropCameraLensRectBitmap(Bitmap src) {
-        return cameraLensView.cropCameraLensRectBitmap(src);
+    public Bitmap cropCameraLensRectBitmap(Bitmap src, boolean withRatio) {
+        return cameraLensView.cropCameraLensRectBitmap(src, withRatio);
     }
 
     public void start() {

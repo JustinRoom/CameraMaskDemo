@@ -1,18 +1,28 @@
 package jsc.exam.com.cameramask.fragments;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
 import jsc.exam.com.cameramask.R;
+import jsc.exam.com.cameramask.widgets.dialog.BottomShowDialog;
 import jsc.kit.cameramask.CameraLensView;
 import jsc.kit.cameramask.ScannerBarView;
 
@@ -25,6 +35,7 @@ import jsc.kit.cameramask.ScannerBarView;
  */
 public class CameraLensViewFragment extends Fragment {
 
+    private ImageView ivBackground;
     private CameraLensView cameraLensView;
 
     @Nullable
@@ -36,6 +47,7 @@ public class CameraLensViewFragment extends Fragment {
     }
 
     private void initView(View root) {
+        ivBackground = root.findViewById(R.id.iv_background);
         cameraLensView = root.findViewById(R.id.camera_lens_view);
         RadioGroup typeRadioGroup = root.findViewById(R.id.radio_group_type);
         typeRadioGroup.check(R.id.radio_type_picture);
@@ -119,5 +131,24 @@ public class CameraLensViewFragment extends Fragment {
 
             }
         });
+
+        root.findViewById(R.id.show_camera_lens_rect_bitmap).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCameraLensRectBitmap();
+            }
+        });
+    }
+
+    private void showCameraLensRectBitmap(){
+        ivBackground.setDrawingCacheEnabled(true);
+        Bitmap bitmap = ivBackground.getDrawingCache(true);
+        bitmap = cameraLensView.cropCameraLensRectBitmap(bitmap, false);
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageBitmap(bitmap);
+        BottomShowDialog dialog = new BottomShowDialog(getContext());
+        dialog.setTitle("ShowBitmapInCameraLensRect");
+        dialog.setBitmap(bitmap);
+        dialog.show();
     }
 }

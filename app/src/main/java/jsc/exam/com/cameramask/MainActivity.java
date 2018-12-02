@@ -91,12 +91,9 @@ public class MainActivity extends BaseActivity {
             case ClassItem.TYPE_FRAGMENT:
                 Bundle bundle = new Bundle();
                 bundle.putString(EmptyFragmentActivity.EXTRA_TITLE, item.getLabel());
-                if (item.getLabel().equals("CameraLensView")
-                        || item.getLabel().equals("CameraScannerMaskView"))
-                    bundle.putBoolean(EmptyFragmentActivity.EXTRA_FULL_SCREEN, true);
+                bundle.putBoolean(EmptyFragmentActivity.EXTRA_FULL_SCREEN, item.isFullScreen());
                 bundle.putBoolean(EmptyFragmentActivity.EXTRA_SHOW_ACTION_BAR, true);
-                if (item.isLandscape())
-                    bundle.putBoolean(EmptyFragmentActivity.EXTRA_LANDSCAPE, true);
+                bundle.putBoolean(EmptyFragmentActivity.EXTRA_LANDSCAPE, item.isLandscape());
                 bundle.putString(EmptyFragmentActivity.EXTRA_FRAGMENT_CLASS_NAME, item.getClazz().getName());
                 EmptyFragmentActivity.launch(this, bundle);
                 break;
@@ -105,9 +102,9 @@ public class MainActivity extends BaseActivity {
 
     private List<ClassItem> getClassItems() {
         List<ClassItem> classItems = new ArrayList<>();
-        classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "CameraLensView", CameraLensViewFragment.class, true));
-        classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "ScannerBarView", ScannerBarViewFragment.class, true));
-        classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "CameraScannerMaskView", CameraScannerMaskViewFragment.class, true));
+        classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "CameraLensView", CameraLensViewFragment.class, true, false, true));
+        classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "ScannerBarView", ScannerBarViewFragment.class, true, false, false));
+        classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "CameraScannerMaskView", CameraScannerMaskViewFragment.class, true, false, true));
         classItems.add(new ClassItem(ClassItem.TYPE_FRAGMENT, "About", AboutFragment.class, false));
         return classItems;
     }

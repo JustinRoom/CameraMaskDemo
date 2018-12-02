@@ -18,19 +18,21 @@ public class ClassItem {
     private int type;
     private boolean updated;
     private boolean isLandscape;
+    private boolean fullScreen;
 
     public ClassItem() {
     }
 
     public ClassItem(@Type int type, String label, Class<?> clazz, boolean updated) {
-        this(type, label, clazz, updated, false);
+        this(type, label, clazz, updated, false, false);
     }
-    public ClassItem(@Type int type, String label, Class<?> clazz, boolean updated, boolean isLandscape) {
+    public ClassItem(@Type int type, String label, Class<?> clazz, boolean updated, boolean isLandscape, boolean fullScreen) {
         this.type = type;
         this.label = label;
         this.clazz = clazz;
         this.updated = updated;
         this.isLandscape = isLandscape;
+        this.fullScreen = fullScreen;
     }
 
     public String getLabel() {
@@ -71,5 +73,13 @@ public class ClassItem {
 
     public void setLandscape(boolean landscape) {
         isLandscape = landscape;
+    }
+
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.fullScreen = fullScreen;
     }
 }

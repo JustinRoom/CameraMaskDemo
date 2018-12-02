@@ -6,13 +6,13 @@
     "apkInfo": {
       "type": "MAIN",
       "splits": [],
-      "versionCode": 1,
-      "versionName": "0.1.0",
+      "versionCode": 2,
+      "versionName": "0.1.1",
       "enabled": true,
       "outputFile": "CameraMaskDemo.apk",
       "fullName": "release",
       "baseName": "release",
-      "content": "\n1、add ScannerBarView\n2、add CameraLensView\n3、add CameraScannerMaskView"
+      "content": "\n1、add method int CameraLensView、CameraScannerMaskView:\n cropCameraLensRectBitmap(Bitmap src, boolean withRatio)"
     },
     "path": "CameraMaskDemo.apk",
     "properties": {}
