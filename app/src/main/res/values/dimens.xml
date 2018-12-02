@@ -54,6 +54,7 @@
     <dimen name="space_50">50dip</dimen>
     <dimen name="space_56">56dip</dimen>
     <dimen name="space_64">64dip</dimen>
+    <dimen name="space_72">72dip</dimen>
     <dimen name="space_128">128dip</dimen>
     <dimen name="space_256">256dip</dimen>
     <dimen name="space_512">512dip</dimen>
