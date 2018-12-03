@@ -39,7 +39,7 @@ import retrofit2.Retrofit;
 /**
  * <br>Email:1006368252@qq.com
  * <br>QQ:1006368252
- * <br><a href="https://github.com/JustinRoom/WheelViewDemo" target="_blank">https://github.com/JustinRoom/WheelViewDemo</a>
+ * <br><a href="https://github.com/JustinRoom/CameraMaskDemo" target="_blank">https://github.com/JustinRoom/CameraMaskDemo</a>
  *
  * @author jiangshicheng
  */
@@ -148,7 +148,7 @@ public class AboutFragment extends Fragment {
                 .setPositiveButton("更新", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String url = BuildConfig.BASE_URL + "JustinRoom/WheelViewDemo/master/output/%s";
+                        String url = BuildConfig.BASE_URL + "JustinRoom/CameraMaskDemo/master/output/%s";
                         Uri uri = Uri.parse(String.format(Locale.CHINA, url, fileName));
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);
