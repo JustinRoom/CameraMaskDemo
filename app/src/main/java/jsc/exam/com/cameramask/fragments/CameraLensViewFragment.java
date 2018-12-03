@@ -37,6 +37,7 @@ public class CameraLensViewFragment extends Fragment {
 
     private ImageView ivBackground;
     private CameraLensView cameraLensView;
+    private Bitmap defaultCameraLensBitmap = null;
 
     @Nullable
     @Override
@@ -56,7 +57,9 @@ public class CameraLensViewFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_type_picture:
-                        cameraLensView.setCameraLensBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.default_camera_lens));
+                        if (defaultCameraLensBitmap == null)
+                            defaultCameraLensBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_camera_lens);
+                        cameraLensView.setCameraLensBitmap(defaultCameraLensBitmap);
                         break;
                     case R.id.radio_type_normal:
                         cameraLensView.setCameraLensBitmap(null);
@@ -140,7 +143,7 @@ public class CameraLensViewFragment extends Fragment {
         });
     }
 
-    private void showCameraLensRectBitmap(){
+    private void showCameraLensRectBitmap() {
         ivBackground.setDrawingCacheEnabled(true);
         Bitmap bitmap = ivBackground.getDrawingCache(true);
         bitmap = cameraLensView.cropCameraLensRectBitmap(bitmap, false);

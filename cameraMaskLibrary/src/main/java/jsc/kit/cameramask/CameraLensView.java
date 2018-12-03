@@ -25,6 +25,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -82,13 +83,6 @@ public class CameraLensView extends View {
     private int textVerticalMargin;//提示文字与相机镜头（或扫描框）的间距
     private int textLeftMargin;//提示文字与View（或相机镜头或扫描框）的左间距
     private int textRightMargin;//提示文字与View（或相机镜头或扫描框）的右间距
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            updateStaticLayout();
-            invalidate();
-        }
-    };
 
     public CameraLensView(@NonNull Context context) {
         super(context);
@@ -289,23 +283,29 @@ public class CameraLensView extends View {
         paint.setStyle(Paint.Style.FILL);
         mCanvas.drawRect(0, 0, getWidth(), getHeight(), paint);
 
-        paint.setXfermode(xfermode);
-        switch (maskShape) {
-            case CAMERA_LENS_SHAPE_SQUARE:
-                mCanvas.drawRect(cameraLensRect, paint);
-                break;
-            case CAMERA_LENS_SHAPE_CIRCULAR:
-                float radius = cameraLensRect.height() / 2.0f;
-                mCanvas.drawCircle(getWidth() / 2.0f, cameraLensRect.top + radius, radius, paint);
-                break;
+        if (cameraLensBitmap == null) {
+            paint.setXfermode(xfermode);
+            switch (maskShape) {
+                case CAMERA_LENS_SHAPE_SQUARE:
+                    mCanvas.drawRect(cameraLensRect, paint);
+                    break;
+                case CAMERA_LENS_SHAPE_CIRCULAR:
+                    float radius = cameraLensRect.height() / 2.0f;
+                    mCanvas.drawCircle(getWidth() / 2.0f, cameraLensRect.top + radius, radius, paint);
+                    break;
+            }
+            paint.setXfermode(null);
+        } else {
+            paint.setXfermode(xfermode);
+            mCanvas.drawRect(cameraLensRect, paint);
+            paint.setXfermode(null);
         }
-        paint.setXfermode(null);
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
 
     private void executeInvalidateDelay() {
-        removeCallbacks(r);
-        postDelayed(r, 10);
+        updateStaticLayout();
+        invalidate();
     }
 
     private void updateStaticLayout() {
@@ -313,24 +313,25 @@ public class CameraLensView extends View {
             textStaticLayout = null;
             return;
         }
-        int textWidth = textMathParent ? getWidth() : cameraLensRect.width();
-        textWidth = textWidth - textLeftMargin - textRightMargin;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textStaticLayout = StaticLayout.Builder.obtain(text, 0, text.length(), textPaint, textWidth)
-                    .setAlignment(StaticLayout.Alignment.ALIGN_CENTER)
-                    .setLineSpacing(0, 1.0f)
-                    .build();
-        } else {
-            textStaticLayout = new StaticLayout(text, textPaint, textWidth, StaticLayout.Alignment.ALIGN_CENTER, 1.0f, 0, true);
+        if (textStaticLayout == null) {
+            int textWidth = textMathParent ? getWidth() : cameraLensRect.width();
+            textWidth = textWidth - textLeftMargin - textRightMargin;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textStaticLayout = StaticLayout.Builder.obtain(text, 0, text.length(), textPaint, textWidth)
+                        .setAlignment(StaticLayout.Alignment.ALIGN_CENTER)
+                        .setLineSpacing(0, 1.0f)
+                        .build();
+            } else {
+                textStaticLayout = new StaticLayout(text, textPaint, textWidth, StaticLayout.Alignment.ALIGN_CENTER, 1.0f, 0, true);
+            }
         }
     }
 
     /**
-     *
      * @param src src
      * @return the bitmap of camera lens area
      */
-    public Bitmap cropCameraLensRectBitmap(Bitmap src, boolean withRatio){
+    public Bitmap cropCameraLensRectBitmap(Bitmap src, boolean withRatio) {
         if (src == null)
             return null;
         int sw = src.getWidth();
@@ -439,6 +440,7 @@ public class CameraLensView extends View {
 
     public void setText(String text) {
         this.text = text;
+        textStaticLayout = null;
         executeInvalidateDelay();
     }
 
