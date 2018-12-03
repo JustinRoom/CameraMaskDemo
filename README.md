@@ -10,7 +10,7 @@ camera mask library and demo
 
 Scan QRCode to download demo application below:
 
-![](/output/camera_mask_demo_qr_code.png)
+![](/app/src/main/res/drawable/camera_mask_demo_qr_code.png)
 
 ### 1、implementation
 + 1.1、Gradle
