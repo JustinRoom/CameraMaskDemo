@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity {
                         Locale.CHINA,
                         "当前版本:\u2000%1s\n"
                                 + "最新版本:\u2000%2s\n\n"
-                                + "更新内容:\n%3s"
+                                + "更新内容:%3s"
                                 + "\n\n立即更新？",
                         curVersionName,
                         versionName,
@@ -182,7 +182,7 @@ public class MainActivity extends BaseActivity {
                 .setPositiveButton("更新", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String url = BuildConfig.BASE_URL + "JustinRoom/CameraMaskDemo/master/output/%s";
+                        String url = BuildConfig.BASE_URL + BuildConfig.DOWNLOAD_URL;
                         Uri uri = Uri.parse(String.format(Locale.CHINA, url, fileName));
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);
