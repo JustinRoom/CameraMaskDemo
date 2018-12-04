@@ -33,12 +33,16 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 | 名称 | 类型 | 描述 |
 |:---|:---|:---|
 |`clvCameraLensSizeRatio`|float|相机镜头（或扫描框）大小占View宽度的百分比|
-|`clvCameraLensTopMargin`|dimension|相机镜头（或扫描框）与顶部的间距|
-|`clvCameraLensShape`|enum(`square`、`circular`)|相机镜头（或扫描框）形状|
+|`clvCameraLensWidth`|dimension|相机镜头（或扫描框）宽度|
+|`clvCameraLensHeight`|dimension|相机镜头（或扫描框）高度|
+|`clvCameraLensGravity`|enum(`top`、`center`、`bottom`)|相机镜头（或扫描框）位置|
+|`clvCameraLensTopMargin`|dimension|相机镜头（或扫描框）Y轴偏移量|
+|`clvCameraLensShape`|enum(`rectangle`、`circular`)|相机镜头（或扫描框）形状|
 |`clvCameraLens`|reference|相机镜头图片资源|
 |`clvMaskColor`|color|相机镜头遮罩颜色|
 |`clvBoxBorderColor`|color|扫描框边的颜色|
 |`clvBoxBorderWidth`|dimension|扫描框边的粗细|
+|`clvShowBoxAngle`|boolean|是否显示扫描框四个角|
 |`clvBoxAngleColor`|color|扫描框四个角的颜色|
 |`clvBoxAngleBorderWidth`|dimension|扫描框四个角边的粗细|
 |`clvBoxAngleLength`|dimension|扫描框四个角边的长度|

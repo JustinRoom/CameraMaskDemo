@@ -6,17 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -24,7 +16,6 @@ import android.widget.SeekBar;
 import jsc.exam.com.cameramask.R;
 import jsc.exam.com.cameramask.widgets.dialog.BottomShowDialog;
 import jsc.kit.cameramask.CameraLensView;
-import jsc.kit.cameramask.ScannerBarView;
 
 /**
  * <br>Email:1006368252@qq.com
@@ -69,22 +60,20 @@ public class CameraLensViewFragment extends Fragment {
         });
 
         RadioGroup shapeRadioGroup = root.findViewById(R.id.radio_group_shape);
-        shapeRadioGroup.check(R.id.radio_shape_circle);
         shapeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_shape_circle:
-                        cameraLensView.setCameraLensShape(CameraLensView.CAMERA_LENS_SHAPE_CIRCULAR);
+                        cameraLensView.setCameraLensShape(CameraLensView.CIRCULAR);
                         break;
                     case R.id.radio_shape_square:
-                        cameraLensView.setCameraLensShape(CameraLensView.CAMERA_LENS_SHAPE_SQUARE);
+                        cameraLensView.setCameraLensShape(CameraLensView.RECTANGLE);
                         break;
                 }
             }
         });
         RadioGroup locationRadioGroup = root.findViewById(R.id.radio_group_location);
-        locationRadioGroup.check(R.id.radio_location_below);
         locationRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

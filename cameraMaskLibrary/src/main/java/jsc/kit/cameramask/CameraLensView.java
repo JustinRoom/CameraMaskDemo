@@ -21,11 +21,9 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -43,12 +41,20 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class CameraLensView extends View {
 
-    public final static int CAMERA_LENS_SHAPE_SQUARE = 0;
-    public final static int CAMERA_LENS_SHAPE_CIRCULAR = 1;
+    public static final int TOP = 0;
+    public static final int CENTER = 1;
+    public static final int BOTTOM = 2;
+    public final static int RECTANGLE = 0;
+    public final static int CIRCULAR = 1;
     public final static int BELOW_CAMERA_LENS = 0;
     public final static int ABOVE_CAMERA_LENS = 1;
 
-    @IntDef({CAMERA_LENS_SHAPE_SQUARE, CAMERA_LENS_SHAPE_CIRCULAR})
+    @IntDef({TOP, CENTER, BOTTOM})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface CameraLensGravity {
+    }
+
+    @IntDef({RECTANGLE, CIRCULAR})
     @Retention(RetentionPolicy.SOURCE)
     public @interface CameraLensShape {
     }
@@ -58,8 +64,8 @@ public class CameraLensView extends View {
     public @interface TextLocation {
     }
 
-    protected Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+    protected Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private RectF rectF = new RectF();
     private Rect cameraLensRect = new Rect();
     private Matrix cameraLensMatrix = new Matrix();
@@ -69,11 +75,15 @@ public class CameraLensView extends View {
     private int boxBorderColor;//扫描框边的颜色
     private int boxBorderWidth;//扫描框边的粗细
     private Path boxAnglePath;
+    private boolean showBoxAngle;
     private int boxAngleColor;//扫描框四个角的颜色
     private int boxAngleBorderWidth;//扫描框四个角边的粗细
     private int boxAngleLength;//扫描框四个角边的长度
     private int cameraLensTopMargin;//相机镜头（或扫描框）与顶部的间距
     private float cameraLensSizeRatio;//相机镜头（或扫描框）大小占View宽度的百分比
+    private int cameraLensWidth;
+    private int cameraLensHeight;
+    private int cameraLensGravity;
 
     protected TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     protected StaticLayout textStaticLayout;
@@ -115,26 +125,31 @@ public class CameraLensView extends View {
                 cameraLensBitmap = BitmapFactory.decodeResource(getResources(), resId);
         }
 
-        cameraLensShape = a.getInt(R.styleable.CameraLensView_clvCameraLensShape, CAMERA_LENS_SHAPE_SQUARE);
+        cameraLensSizeRatio = a.getFloat(R.styleable.CameraLensView_clvCameraLensSizeRatio, .5f);
+        if (cameraLensSizeRatio < .3f)
+            cameraLensSizeRatio = .3f;
+        if (cameraLensSizeRatio > 1.0f)
+            cameraLensSizeRatio = 1.0f;
+        cameraLensWidth = a.getDimensionPixelSize(R.styleable.CameraLensView_clvCameraLensWidth, -1);
+        cameraLensHeight = a.getDimensionPixelSize(R.styleable.CameraLensView_clvCameraLensHeight, -1);
+        cameraLensGravity = a.getInt(R.styleable.CameraLensView_clvCameraLensGravity, TOP);
+
+        cameraLensShape = a.getInt(R.styleable.CameraLensView_clvCameraLensShape, RECTANGLE);
         boxBorderColor = a.getColor(R.styleable.CameraLensView_clvBoxBorderColor, 0x99FFFFFF);
         boxBorderWidth = a.getDimensionPixelSize(R.styleable.CameraLensView_clvBoxBorderWidth, 2);
+        showBoxAngle = a.getBoolean(R.styleable.CameraLensView_clvShowBoxAngle, true);
         boxAngleColor = a.getColor(R.styleable.CameraLensView_clvBoxAngleColor, Color.YELLOW);
         int defaultScannerBoxAngleBorderWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         boxAngleBorderWidth = a.getDimensionPixelSize(R.styleable.CameraLensView_clvBoxAngleBorderWidth, defaultScannerBoxAngleBorderWidth);
         int defaultScannerBoxAngleLength = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
         boxAngleLength = a.getDimensionPixelSize(R.styleable.CameraLensView_clvBoxAngleLength, defaultScannerBoxAngleLength);
         maskColor = a.getColor(R.styleable.CameraLensView_clvMaskColor, 0x99000000);
-        cameraLensSizeRatio = a.getFloat(R.styleable.CameraLensView_clvCameraLensSizeRatio, .6f);
-        if (cameraLensSizeRatio < .3f)
-            cameraLensSizeRatio = .3f;
-        if (cameraLensSizeRatio > 1.0f)
-            cameraLensSizeRatio = 1.0f;
 
         text = a.getString(R.styleable.CameraLensView_clvText);
         int textColor = a.getColor(R.styleable.CameraLensView_clvTextColor, Color.WHITE);
         int defaultTextSize = (int) (TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()) + .5f);
         float textSize = a.getDimension(R.styleable.CameraLensView_clvTextSize, defaultTextSize);
-        textMathParent = a.getBoolean(R.styleable.CameraLensView_clvTextMathParent, false);
+        textMathParent = a.getBoolean(R.styleable.CameraLensView_clvTextMathParent, true);
         textLocation = a.getInt(R.styleable.CameraLensView_clvTextLocation, BELOW_CAMERA_LENS);
         textVerticalMargin = a.getDimensionPixelSize(R.styleable.CameraLensView_clvTextVerticalMargin, 0);
         textLeftMargin = a.getDimensionPixelSize(R.styleable.CameraLensView_clvTextLeftMargin, 0);
@@ -148,112 +163,36 @@ public class CameraLensView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        initCameraLensSize(getMeasuredWidth());
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        initCameraLensSize(w, h);
         invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawMask(canvas, cameraLensShape);
-
-        float translateX = 0;
-        float translateY = 0;
-        if (cameraLensBitmap != null) {
-            translateX = cameraLensRect.left;
-            translateY = cameraLensTopMargin;
-            float scale = cameraLensRect.width() * 1.0f / cameraLensBitmap.getWidth();
-            cameraLensMatrix.setScale(scale, scale);
-            canvas.save();
-            canvas.translate(translateX, translateY);
-            canvas.drawBitmap(cameraLensBitmap, cameraLensMatrix, null);
-            canvas.translate(-translateX, -translateY);
-            canvas.restore();
-        } else {
-            paint.setStyle(Paint.Style.STROKE);
-            switch (cameraLensShape) {
-                case CAMERA_LENS_SHAPE_SQUARE:
-                    if (boxAnglePath == null) {
-                        boxAnglePath = new Path();
-                    }
-                    paint.setStrokeWidth(boxBorderWidth);
-                    paint.setColor(boxBorderColor);
-                    canvas.drawRect(cameraLensRect, paint);
-
-                    paint.setStrokeWidth(boxAngleBorderWidth);
-                    paint.setColor(boxAngleColor);
-                    //左上角
-                    boxAnglePath.reset();
-                    boxAnglePath.moveTo(cameraLensRect.left, cameraLensRect.top + boxAngleLength);
-                    boxAnglePath.lineTo(cameraLensRect.left, cameraLensRect.top);
-                    boxAnglePath.lineTo(cameraLensRect.left + boxAngleLength, cameraLensRect.top);
-                    canvas.drawPath(boxAnglePath, paint);
-                    //右上角
-                    boxAnglePath.reset();
-                    boxAnglePath.moveTo(cameraLensRect.right - boxAngleLength, cameraLensRect.top);
-                    boxAnglePath.lineTo(cameraLensRect.right, cameraLensRect.top);
-                    boxAnglePath.lineTo(cameraLensRect.right, cameraLensRect.top + boxAngleLength);
-                    canvas.drawPath(boxAnglePath, paint);
-                    //右下角
-                    boxAnglePath.reset();
-                    boxAnglePath.moveTo(cameraLensRect.right, cameraLensRect.bottom - boxAngleLength);
-                    boxAnglePath.lineTo(cameraLensRect.right, cameraLensRect.bottom);
-                    boxAnglePath.lineTo(cameraLensRect.right - boxAngleLength, cameraLensRect.bottom);
-                    canvas.drawPath(boxAnglePath, paint);
-                    //左下角
-                    boxAnglePath.reset();
-                    boxAnglePath.moveTo(cameraLensRect.left + boxAngleLength, cameraLensRect.bottom);
-                    boxAnglePath.lineTo(cameraLensRect.left, cameraLensRect.bottom);
-                    boxAnglePath.lineTo(cameraLensRect.left, cameraLensRect.bottom - boxAngleLength);
-                    canvas.drawPath(boxAnglePath, paint);
-                    break;
-                case CAMERA_LENS_SHAPE_CIRCULAR:
-                    paint.setStrokeWidth(boxBorderWidth);
-                    paint.setColor(boxBorderColor);
-                    float cx = cameraLensRect.left + cameraLensRect.width() / 2.0f;
-                    float cy = cameraLensRect.top + cameraLensRect.height() / 2.0f;
-                    float radius = cameraLensRect.width() / 2.0f - boxBorderWidth / 2.0f;
-                    canvas.drawCircle(cx, cy, radius, paint);
-
-                    paint.setStrokeWidth(boxAngleBorderWidth);
-                    paint.setColor(boxAngleColor);
-                    float halfBoxAngleBorderWidth = boxAngleBorderWidth / 16.0f;
-                    rectF.set(
-                            cx - radius - halfBoxAngleBorderWidth,
-                            cy - radius - halfBoxAngleBorderWidth,
-                            cx + radius + halfBoxAngleBorderWidth,
-                            cy + radius + halfBoxAngleBorderWidth
-                    );
-                    float angle = (float) (boxAngleLength * 180 / (Math.PI * radius));
-                    float startAngle;
-                    //左上角
-                    startAngle = 225 - angle / 2;
-                    canvas.drawArc(rectF, startAngle, angle, false, paint);
-                    //右上角
-                    startAngle = 315 - angle / 2;
-                    canvas.drawArc(rectF, startAngle, angle, false, paint);
-                    //右下角
-                    startAngle = 45 - angle / 2;
-                    canvas.drawArc(rectF, startAngle, angle, false, paint);
-                    //左下角
-                    startAngle = 135 - angle / 2;
-                    canvas.drawArc(rectF, startAngle, angle, false, paint);
-                    break;
-            }
-
+        drawMask(canvas);
+        switch (cameraLensShape) {
+            case RECTANGLE:
+                if (drawCameraLensBitmap(canvas))
+                    drawRectangle(canvas);
+                break;
+            case CIRCULAR:
+                if (drawCameraLensBitmap(canvas))
+                    drawCircular(canvas);
+                break;
         }
 
         //提示文字
         if (textStaticLayout != null) {
             canvas.save();
-            translateX = textMathParent ? 0 : cameraLensRect.left;
+            float translateX = textMathParent ? 0 : cameraLensRect.left;
             translateX = translateX + textLeftMargin;
-            translateY = textLocation == BELOW_CAMERA_LENS ? cameraLensRect.bottom + textVerticalMargin : cameraLensRect.top - textVerticalMargin - textStaticLayout.getHeight();
+            float translateY = textLocation == BELOW_CAMERA_LENS ? cameraLensRect.bottom + textVerticalMargin : cameraLensRect.top - textVerticalMargin - textStaticLayout.getHeight();
             canvas.translate(translateX, translateY);
             textStaticLayout.draw(canvas);
             canvas.translate(-translateX, -translateY);
@@ -261,46 +200,187 @@ public class CameraLensView extends View {
         }
     }
 
-    private void initCameraLensSize(int width) {
-        int cameraLensSize = (int) (width * cameraLensSizeRatio);
-        int left = (width - cameraLensSize) / 2;
-        cameraLensRect.set(left, cameraLensTopMargin, left + cameraLensSize, cameraLensTopMargin + cameraLensSize);
+    private boolean drawCameraLensBitmap(Canvas canvas) {
+        if (cameraLensBitmap == null)
+            return true;
+
+        float translateX = cameraLensRect.left;
+        float translateY = cameraLensRect.top;
+        float scaleX = cameraLensRect.width() * 1.0f / cameraLensBitmap.getWidth();
+        float scaleY = cameraLensRect.height() * 1.0f / cameraLensBitmap.getHeight();
+        cameraLensMatrix.setScale(scaleX, scaleY);
+        canvas.save();
+        canvas.translate(translateX, translateY);
+        canvas.drawBitmap(cameraLensBitmap, cameraLensMatrix, null);
+        canvas.translate(-translateX, -translateY);
+        canvas.restore();
+        return false;
+    }
+
+    private void drawRectangle(Canvas canvas) {
+        paint.setStyle(Paint.Style.STROKE);
+        if (boxAnglePath == null) {
+            boxAnglePath = new Path();
+        }
+        paint.setStrokeWidth(boxBorderWidth);
+        paint.setColor(boxBorderColor);
+        canvas.drawRect(cameraLensRect, paint);
+
+        if (!showBoxAngle)
+            return;
+        paint.setStrokeWidth(boxAngleBorderWidth);
+        paint.setColor(boxAngleColor);
+        //左上角
+        boxAnglePath.reset();
+        boxAnglePath.moveTo(cameraLensRect.left, cameraLensRect.top + boxAngleLength);
+        boxAnglePath.lineTo(cameraLensRect.left, cameraLensRect.top);
+        boxAnglePath.lineTo(cameraLensRect.left + boxAngleLength, cameraLensRect.top);
+        canvas.drawPath(boxAnglePath, paint);
+        //右上角
+        boxAnglePath.reset();
+        boxAnglePath.moveTo(cameraLensRect.right - boxAngleLength, cameraLensRect.top);
+        boxAnglePath.lineTo(cameraLensRect.right, cameraLensRect.top);
+        boxAnglePath.lineTo(cameraLensRect.right, cameraLensRect.top + boxAngleLength);
+        canvas.drawPath(boxAnglePath, paint);
+        //右下角
+        boxAnglePath.reset();
+        boxAnglePath.moveTo(cameraLensRect.right, cameraLensRect.bottom - boxAngleLength);
+        boxAnglePath.lineTo(cameraLensRect.right, cameraLensRect.bottom);
+        boxAnglePath.lineTo(cameraLensRect.right - boxAngleLength, cameraLensRect.bottom);
+        canvas.drawPath(boxAnglePath, paint);
+        //左下角
+        boxAnglePath.reset();
+        boxAnglePath.moveTo(cameraLensRect.left + boxAngleLength, cameraLensRect.bottom);
+        boxAnglePath.lineTo(cameraLensRect.left, cameraLensRect.bottom);
+        boxAnglePath.lineTo(cameraLensRect.left, cameraLensRect.bottom - boxAngleLength);
+        canvas.drawPath(boxAnglePath, paint);
+    }
+
+    private void drawCircular(Canvas canvas) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(boxBorderWidth);
+        paint.setColor(boxBorderColor);
+        float cx = cameraLensRect.exactCenterX();
+        float cy = cameraLensRect.exactCenterY();
+        float radius = (cameraLensRect.width() - boxBorderWidth) / 2.0f;
+        canvas.drawCircle(cx, cy, radius, paint);
+
+        if (!showBoxAngle)
+            return;
+        paint.setStrokeWidth(boxAngleBorderWidth);
+        paint.setColor(boxAngleColor);
+        float halfBoxAngleBorderWidth = boxAngleBorderWidth / 16.0f;
+        rectF.set(
+                cx - radius - halfBoxAngleBorderWidth,
+                cy - radius - halfBoxAngleBorderWidth,
+                cx + radius + halfBoxAngleBorderWidth,
+                cy + radius + halfBoxAngleBorderWidth
+        );
+        float angle = (float) (boxAngleLength * 180 / (Math.PI * radius));
+        float startAngle;
+        //左上角
+        startAngle = 225 - angle / 2;
+        canvas.drawArc(rectF, startAngle, angle, false, paint);
+        //右上角
+        startAngle = 315 - angle / 2;
+        canvas.drawArc(rectF, startAngle, angle, false, paint);
+        //右下角
+        startAngle = 45 - angle / 2;
+        canvas.drawArc(rectF, startAngle, angle, false, paint);
+        //左下角
+        startAngle = 135 - angle / 2;
+        canvas.drawArc(rectF, startAngle, angle, false, paint);
+    }
+
+    private void initCameraLensSize(int w, int h) {
+        switch (cameraLensGravity) {
+            case TOP:
+                if (cameraLensWidth > 0 && cameraLensHeight > 0) {
+                    cameraLensRect.left = (w - cameraLensWidth) / 2;
+                    cameraLensRect.top = cameraLensTopMargin;
+                    cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
+                    cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
+                } else {
+                    int cameraLensSize = (int) (w * cameraLensSizeRatio);
+                    cameraLensRect.left = (w - cameraLensSize) / 2;
+                    cameraLensRect.top = cameraLensTopMargin;
+                    cameraLensRect.right = cameraLensRect.left + cameraLensSize;
+                    cameraLensRect.bottom = cameraLensRect.top + cameraLensSize;
+                }
+                break;
+            case CENTER:
+                if (cameraLensWidth > 0 && cameraLensHeight > 0) {
+                    cameraLensRect.left = (w - cameraLensWidth) / 2;
+                    cameraLensRect.top = (h - cameraLensHeight) / 2 + cameraLensTopMargin;
+                    cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
+                    cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
+                } else {
+                    int cameraLensSize = (int) (w * cameraLensSizeRatio);
+                    cameraLensRect.left = (w - cameraLensSize) / 2;
+                    cameraLensRect.top = (h - cameraLensSize) / 2 + cameraLensTopMargin;
+                    cameraLensRect.right = cameraLensRect.left + cameraLensSize;
+                    cameraLensRect.bottom = cameraLensRect.top + cameraLensSize;
+                }
+                break;
+            case BOTTOM:
+                if (cameraLensWidth > 0 && cameraLensHeight > 0) {
+                    cameraLensRect.left = (w - cameraLensWidth) / 2;
+                    cameraLensRect.top = h - cameraLensHeight + cameraLensTopMargin;
+                    cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
+                    cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
+                } else {
+                    int cameraLensSize = (int) (w * cameraLensSizeRatio);
+                    cameraLensRect.left = (w - cameraLensSize) / 2;
+                    cameraLensRect.top = h - cameraLensSize + cameraLensTopMargin;
+                    cameraLensRect.right = cameraLensRect.left + cameraLensSize;
+                    cameraLensRect.bottom = cameraLensRect.top + cameraLensSize;
+                }
+                break;
+        }
+        switch (cameraLensShape) {
+            case RECTANGLE:
+                break;
+            case CIRCULAR:
+                Rect temp = new Rect(cameraLensRect);
+                int centerX = temp.centerX();
+                int centerY = temp.centerY();
+                int max = Math.min(temp.width(), temp.height());
+                int left = centerX - max / 2;
+                int top = centerY - max / 2;
+                cameraLensRect.set(left, top, left + max, top + max);
+                break;
+        }
         updateStaticLayout();
     }
 
     /**
      * The second way to draw mask. In this way, there are two different shapes.
-     * Square: {@link #CAMERA_LENS_SHAPE_SQUARE}、Circular: {@link #CAMERA_LENS_SHAPE_CIRCULAR}.
+     * Square: {@link #RECTANGLE}、Circular: {@link #CIRCULAR}.
      *
      * @param canvas    canvas
-     * @param maskShape mask shape. One of {@link #CAMERA_LENS_SHAPE_SQUARE}、{@link #CAMERA_LENS_SHAPE_CIRCULAR}.
      */
-    private void drawMask(Canvas canvas, int maskShape) {
+    private void drawMask(Canvas canvas) {
         //满屏幕bitmap
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(bitmap);
+        Bitmap maskBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas mCanvas = new Canvas(maskBitmap);
         paint.setColor(maskColor);
         paint.setStyle(Paint.Style.FILL);
         mCanvas.drawRect(0, 0, getWidth(), getHeight(), paint);
 
-        if (cameraLensBitmap == null) {
-            paint.setXfermode(xfermode);
-            switch (maskShape) {
-                case CAMERA_LENS_SHAPE_SQUARE:
-                    mCanvas.drawRect(cameraLensRect, paint);
-                    break;
-                case CAMERA_LENS_SHAPE_CIRCULAR:
-                    float radius = cameraLensRect.height() / 2.0f;
-                    mCanvas.drawCircle(getWidth() / 2.0f, cameraLensRect.top + radius, radius, paint);
-                    break;
-            }
-            paint.setXfermode(null);
-        } else {
-            paint.setXfermode(xfermode);
-            mCanvas.drawRect(cameraLensRect, paint);
-            paint.setXfermode(null);
+        paint.setXfermode(xfermode);
+        switch (cameraLensShape) {
+            case RECTANGLE:
+                mCanvas.drawRect(cameraLensRect, paint);
+                break;
+            case CIRCULAR:
+                float centerX = cameraLensRect.exactCenterX();
+                float centerY = cameraLensRect.exactCenterY();
+                float radius = cameraLensRect.width() / 2.0f;
+                mCanvas.drawCircle(centerX, centerY, radius, paint);
+                break;
         }
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        paint.setXfermode(null);
+        canvas.drawBitmap(maskBitmap, 0, 0, null);
     }
 
     private void executeInvalidateDelay() {
@@ -421,8 +501,10 @@ public class CameraLensView extends View {
     }
 
     public void setCameraLensTopMargin(int cameraLensTopMargin) {
+        int moveY = cameraLensTopMargin - this.cameraLensTopMargin;
         this.cameraLensTopMargin = cameraLensTopMargin;
-        requestLayout();
+        cameraLensRect.offset(0, moveY);
+        invalidate();
     }
 
     public float getCameraLensSizeRatio() {

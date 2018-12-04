@@ -17,11 +17,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:clvCameraLens="@drawable/default_camera_lens"
-        app:clvCameraLensSizeRatio=".6"
         app:clvCameraLensTopMargin="0dp"
         app:clvText="Put QR code inside camera lens please."
         app:clvTextLocation="belowCameraLens"
         app:clvTextSize="14sp"
+        app:clvCameraLensSizeRatio=".6"
+        app:clvCameraLensShape="rectangle"
+        app:clvCameraLensGravity="top"
+        app:clvShowBoxAngle="true"
+        app:clvTextMathParent="true"
         app:clvTextVerticalMargin="0dp" />
 
     <LinearLayout
@@ -38,6 +42,7 @@
             android:orientation="horizontal">
 
             <RadioButton
+                android:checked="true"
                 android:id="@+id/radio_type_picture"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -71,6 +76,7 @@
                 android:textColor="@android:color/white" />
 
             <RadioButton
+                android:checked="true"
                 android:id="@+id/radio_shape_square"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

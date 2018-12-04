@@ -4,12 +4,22 @@
     <declare-styleable name="CameraLensView">
         <!--相机镜头（或扫描框）大小占View宽度的百分比-->
         <attr name="clvCameraLensSizeRatio" format="float"/>
-        <!--相机镜头（或扫描框）与顶部的间距-->
+        <!--相机镜头（或扫描框）宽度-->
+        <attr name="clvCameraLensWidth" format="dimension"/>
+        <!--相机镜头（或扫描框）高度-->
+        <attr name="clvCameraLensHeight" format="dimension"/>
+        <!--相机镜头（或扫描框）位置-->
+        <attr name="clvCameraLensGravity" >
+            <enum name="top" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="bottom" value="2"/>
+        </attr>
+        <!--相机镜头（或扫描框）Y轴偏移量-->
         <attr name="clvCameraLensTopMargin" format="dimension"/>
         <!--相机镜头（或扫描框）形状-->
         <attr name="clvCameraLensShape">
             <!--正方形-->
-            <enum name="square" value="0"/>
+            <enum name="rectangle" value="0"/>
             <!--圆形-->
             <enum name="circular" value="1"/>
         </attr>
@@ -23,6 +33,8 @@
         <attr name="clvBoxBorderColor" format="color"/>
         <!--扫描框边的粗细-->
         <attr name="clvBoxBorderWidth" format="dimension"/>
+        <!--是否显示扫描框四个角-->
+        <attr name="clvShowBoxAngle" format="boolean"/>
         <!--扫描框四个角的颜色-->
         <attr name="clvBoxAngleColor" format="color"/>
         <!--扫描框四个角边的粗细-->
