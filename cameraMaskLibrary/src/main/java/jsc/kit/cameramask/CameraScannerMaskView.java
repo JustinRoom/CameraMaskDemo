@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -16,8 +17,9 @@ import android.widget.FrameLayout;
  *
  * @author jiangshicheng
  */
-public class CameraScannerMaskView extends FrameLayout {
+public class CameraScannerMaskView extends FrameLayout implements CameraLensView.OnInitCameraLensCallBack {
 
+    private final String TAG = "CameraScannerMas";
     private ScannerBarView scannerBarView;
     private CameraLensView cameraLensView;
 
@@ -31,26 +33,27 @@ public class CameraScannerMaskView extends FrameLayout {
 
     public CameraScannerMaskView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        Log.i(TAG, "CameraScannerMaskView: ");
         cameraLensView = new CameraLensView(context, attrs, defStyleAttr);
         scannerBarView = new ScannerBarView(context, attrs, defStyleAttr);
         addView(cameraLensView, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         addView(scannerBarView, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        cameraLensView.setInitCameraLensCallBack(this);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    public void onFinishInitialize(@NonNull Rect rect) {
+        reLocationScannerBarView(rect);
+    }
+
+    private void reLocationScannerBarView(@NonNull Rect rect){
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) scannerBarView.getLayoutParams();
-        Rect rect = cameraLensView.getCameraLensRect();
         params.width = rect.width();
         params.height = rect.height();
         params.leftMargin = rect.left;
         params.topMargin = rect.top;
         scannerBarView.setLayoutParams(params);
-    }
-
-    public Bitmap cropCameraLensRectBitmap(Bitmap src, boolean withRatio) {
-        return cameraLensView.cropCameraLensRectBitmap(src, withRatio);
     }
 
     public void start() {

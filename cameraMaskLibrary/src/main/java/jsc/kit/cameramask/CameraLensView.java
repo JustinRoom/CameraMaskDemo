@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -41,6 +42,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class CameraLensView extends View {
 
+    private final String TAG = "CameraLensView";
     public static final int TOP = 0;
     public static final int CENTER = 1;
     public static final int BOTTOM = 2;
@@ -93,6 +95,8 @@ public class CameraLensView extends View {
     private int textVerticalMargin;//提示文字与相机镜头（或扫描框）的间距
     private int textLeftMargin;//提示文字与View（或相机镜头或扫描框）的左间距
     private int textRightMargin;//提示文字与View（或相机镜头或扫描框）的右间距
+
+    private OnInitCameraLensCallBack initCameraLensCallBack = null;
 
     public CameraLensView(@NonNull Context context) {
         super(context);
@@ -169,12 +173,12 @@ public class CameraLensView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         initCameraLensSize(w, h);
-        invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.i(TAG, "onDraw: ");
         drawMask(canvas);
         switch (cameraLensShape) {
             case RECTANGLE:
@@ -293,6 +297,7 @@ public class CameraLensView extends View {
     }
 
     private void initCameraLensSize(int w, int h) {
+        Log.i(TAG, "initCameraLensSize: ");
         switch (cameraLensGravity) {
             case TOP:
                 if (cameraLensWidth > 0 && cameraLensHeight > 0) {
@@ -351,13 +356,16 @@ public class CameraLensView extends View {
                 break;
         }
         updateStaticLayout();
+
+        if (initCameraLensCallBack != null)
+            initCameraLensCallBack.onFinishInitialize(cameraLensRect);
     }
 
     /**
      * The second way to draw mask. In this way, there are two different shapes.
      * Square: {@link #RECTANGLE}、Circular: {@link #CIRCULAR}.
      *
-     * @param canvas    canvas
+     * @param canvas canvas
      */
     private void drawMask(Canvas canvas) {
         //满屏幕bitmap
@@ -428,6 +436,10 @@ public class CameraLensView extends View {
 
 
     //getter and setter
+    public void setInitCameraLensCallBack(OnInitCameraLensCallBack initCameraLensCallBack) {
+        this.initCameraLensCallBack = initCameraLensCallBack;
+    }
+
     @NonNull
     public Rect getCameraLensRect() {
         return cameraLensRect;
@@ -504,7 +516,7 @@ public class CameraLensView extends View {
         int moveY = cameraLensTopMargin - this.cameraLensTopMargin;
         this.cameraLensTopMargin = cameraLensTopMargin;
         cameraLensRect.offset(0, moveY);
-        invalidate();
+        executeInvalidateDelay();
     }
 
     public float getCameraLensSizeRatio() {
@@ -578,5 +590,14 @@ public class CameraLensView extends View {
     public void setCameraLensShape(@CameraLensShape int cameraLensShape) {
         this.cameraLensShape = cameraLensShape;
         executeInvalidateDelay();
+    }
+
+    public interface OnInitCameraLensCallBack {
+
+        /**
+         * Call back when camera lens location was initialized.
+         * @param rect camera lens rect
+         */
+        void onFinishInitialize(@NonNull Rect rect);
     }
 }
