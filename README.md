@@ -94,6 +94,14 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 
 ### 5、release log
 
+##### version:0.2.1
++ 1、optimize [CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java), add attrs:  
+clvCameraLensWidth：相机镜头（或扫描框）宽度  
+clvCameraLensHeight：相机镜头（或扫描框）高  
+clvCameraLensGravity(`top`、`center`、`bottom`)：相机镜头（或扫描框）位置  
+clvShowBoxAngle：是否显示扫描框四个角  
+
+
 ##### version:0.1.2
 + 1、optimize [CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java)
 
