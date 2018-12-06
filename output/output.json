@@ -6,13 +6,13 @@
     "apkInfo": {
       "type": "MAIN",
       "splits": [],
-      "versionCode": 5,
-      "versionName": "0.2.1",
+      "versionCode": 6,
+      "versionName": "0.3.0",
       "enabled": true,
       "outputFile": "CameraMaskDemo.apk",
       "fullName": "release",
       "baseName": "release",
-      "content": "\n1、optimize CameraLensView, add attrs:\nclvCameraLensWidth：相机镜头（或扫描框）宽度\nclvCameraLensHeight：相机镜头（或扫描框）高\nclvCameraLensGravity(`top`、`center`、`bottom`)：相机镜头（或扫描框）位置\nclvShowBoxAngle：是否显示扫描框四个角"
+      "content": "\n1、fix bugsn2、optimize CameraLensView, add attrs:\nclvCameraLensWidthWeight：相机镜头宽度比重,例如:{1.5,4}\nclvCameraLensHeightWeight：相机镜头高度比重,例如:`{5,2}"
     },
     "path": "CameraMaskDemo.apk",
     "properties": {}

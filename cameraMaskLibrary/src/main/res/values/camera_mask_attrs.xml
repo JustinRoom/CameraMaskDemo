@@ -2,21 +2,25 @@
 <resources>
 
     <declare-styleable name="CameraLensView">
-        <!--相机镜头（或扫描框）大小占View宽度的百分比-->
+        <!--相机镜头大小占View宽度的百分比-->
         <attr name="clvCameraLensSizeRatio" format="float"/>
-        <!--相机镜头（或扫描框）宽度-->
+        <!--相机镜头宽度比重-->
+        <attr name="clvCameraLensWidthWeight" format="string"/>
+        <!--相机镜头高度比重-->
+        <attr name="clvCameraLensHeightWeight" format="string"/>
+        <!--相机镜头宽度-->
         <attr name="clvCameraLensWidth" format="dimension"/>
-        <!--相机镜头（或扫描框）高度-->
+        <!--相机镜头高度-->
         <attr name="clvCameraLensHeight" format="dimension"/>
-        <!--相机镜头（或扫描框）位置-->
+        <!--相机镜头位置-->
         <attr name="clvCameraLensGravity" >
             <enum name="top" value="0"/>
             <enum name="center" value="1"/>
             <enum name="bottom" value="2"/>
         </attr>
-        <!--相机镜头（或扫描框）Y轴偏移量-->
+        <!--相机镜头Y轴偏移量-->
         <attr name="clvCameraLensTopMargin" format="dimension"/>
-        <!--相机镜头（或扫描框）形状-->
+        <!--相机镜头形状-->
         <attr name="clvCameraLensShape">
             <!--正方形-->
             <enum name="rectangle" value="0"/>
@@ -48,16 +52,16 @@
         <attr name="clvTextColor" format="color"/>
         <!--提示文字字体大小-->
         <attr name="clvTextSize" format="dimension"/>
-        <!--提示文字是否填充View的宽度。true与View等宽，false与相机镜头（或扫描框）等宽。-->
+        <!--提示文字是否填充View的宽度。true与View等宽，false与相机镜头等宽。-->
         <attr name="clvTextMathParent" format="boolean"/>
-        <!--提示文字位于相机镜头（或扫描框）上方（或下方）-->
+        <!--提示文字位于相机镜头上方（或下方）-->
         <attr name="clvTextLocation">
-            <!--提示文字位于相机镜头（或扫描框）下方-->
+            <!--提示文字位于相机镜头下方-->
             <enum name="belowCameraLens" value="0"/>
-            <!--提示文字位于相机镜头（或扫描框）上方-->
+            <!--提示文字位于相机镜头上方-->
             <enum name="aboveCameraLens" value="1"/>
         </attr>
-        <!--提示文字与相机镜头（或扫描框）的间距-->
+        <!--提示文字与相机镜头的间距-->
         <attr name="clvTextVerticalMargin" format="dimension"/>
         <!--提示文字与View（或相机镜头或扫描框）的左间距-->
         <attr name="clvTextLeftMargin" format="dimension"/>

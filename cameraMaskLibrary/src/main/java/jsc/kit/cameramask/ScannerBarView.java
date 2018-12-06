@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * ScannerBarView
@@ -26,28 +29,39 @@ public class ScannerBarView extends ViewGroup {
     private ObjectAnimator animator = null;
 
     public ScannerBarView(Context context) {
-        this(context, null);
+        super(context);
+        initView(context);
+        init(context, null, 0);
     }
 
     public ScannerBarView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        initView(context);
+        init(context, attrs, 0);
     }
 
     public ScannerBarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView(context);
+        init(context, attrs, defStyleAttr);
+    }
 
+    private void initView(Context context){
         scannerBar = new ImageView(context);
         scannerBar.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        addView(scannerBar, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+    }
+
+    public void init(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScannerBarView, defStyleAttr, 0);
         scannerBar.setImageResource(a.getResourceId(R.styleable.ScannerBarView_sbvSrc, R.drawable.camera_mask_scanner_bar));
         a.recycle();
-        addView(scannerBar);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -55,7 +69,7 @@ public class ScannerBarView extends ViewGroup {
         if (getChildCount() > 0) {
             for (int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
-                child.layout(0, 0 - child.getMeasuredHeight(), getMeasuredWidth(), 0);
+                child.layout(0, 0 - child.getMeasuredHeight(), child.getMeasuredWidth(), 0);
             }
         }
     }

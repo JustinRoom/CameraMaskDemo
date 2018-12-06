@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name">CameraMask</string>
     <string name="app_update_content">
-        \n1、optimize CameraLensView, add attrs:
-        \nclvCameraLensWidth：相机镜头（或扫描框）宽度
-        \nclvCameraLensHeight：相机镜头（或扫描框）高度
-        \nclvCameraLensGravity(`top`、`center`、`bottom`)：相机镜头（或扫描框）位置
-        \nclvShowBoxAngle：是否显示扫描框四个角
+        \n1、fix bugs
+        \n2、optimize CameraLensView, add attrs:
+        \nclvCameraLensWidthWeight：相机镜头宽度比重,例如:{1.5,4}
+        \nclvCameraLensHeightWeight：相机镜头高度比重,例如:`{5,2}
     </string>
 </resources>

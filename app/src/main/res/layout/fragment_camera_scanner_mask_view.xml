@@ -15,7 +15,9 @@
         android:id="@+id/camera_scanner_mask_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:clvCameraLensSizeRatio=".5"
+        app:clvCameraLensWidthWeight="{1.5, 4}"
+        app:clvCameraLensHeight="96dp"
+        app:clvCameraLensHeightWeight="{2, 5}"
         app:clvCameraLensTopMargin="@dimen/space_64"
         app:clvText="Put QR code inside camera lens please."
         app:clvTextVerticalMargin="@dimen/space_16" />

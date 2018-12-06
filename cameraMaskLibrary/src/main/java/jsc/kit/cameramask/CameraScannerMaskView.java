@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
  *
  * @author jiangshicheng
  */
-public class CameraScannerMaskView extends FrameLayout implements CameraLensView.OnInitCameraLensCallBack {
+public class CameraScannerMaskView extends FrameLayout {
 
     private final String TAG = "CameraScannerMas";
     private ScannerBarView scannerBarView;
@@ -33,18 +33,19 @@ public class CameraScannerMaskView extends FrameLayout implements CameraLensView
 
     public CameraScannerMaskView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        Log.i(TAG, "CameraScannerMaskView: ");
-        cameraLensView = new CameraLensView(context, attrs, defStyleAttr);
-        scannerBarView = new ScannerBarView(context, attrs, defStyleAttr);
-        addView(cameraLensView, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        cameraLensView = new CameraLensView(context);
+        cameraLensView.init(context, attrs, defStyleAttr);
+        scannerBarView = new ScannerBarView(context);
+        scannerBarView.init(context, attrs, defStyleAttr);
+        addView(cameraLensView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         addView(scannerBarView, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        cameraLensView.setInitCameraLensCallBack(this);
     }
 
     @Override
-    public void onFinishInitialize(@NonNull Rect rect) {
-        reLocationScannerBarView(rect);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
+        reLocationScannerBarView(cameraLensView.getCameraLensRect());
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     private void reLocationScannerBarView(@NonNull Rect rect){

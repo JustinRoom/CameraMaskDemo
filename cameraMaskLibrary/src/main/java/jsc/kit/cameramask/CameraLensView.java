@@ -17,7 +17,6 @@ import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.FloatRange;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -81,18 +80,19 @@ public class CameraLensView extends View {
     private int boxAngleColor;//扫描框四个角的颜色
     private int boxAngleBorderWidth;//扫描框四个角边的粗细
     private int boxAngleLength;//扫描框四个角边的长度
-    private int cameraLensTopMargin;//相机镜头（或扫描框）与顶部的间距
-    private float cameraLensSizeRatio;//相机镜头（或扫描框）大小占View宽度的百分比
-    private int cameraLensWidth;
-    private int cameraLensHeight;
+    private int cameraLensTopMargin;//相机镜头在Y轴上的偏移量
+    private float cameraLensWidthRatio = 0.0f;//相机镜宽度百分比
+    private float cameraLensHeightRatio = 0.0f;//相机镜高度百分比
+    private int cameraLensWidth = 0;
+    private int cameraLensHeight = 0;
     private int cameraLensGravity;
 
     protected TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     protected StaticLayout textStaticLayout;
     private String text;//提示文字
-    private boolean textMathParent;//提示文字是否填充父View的宽度。true与View等宽，false与相机镜头（或扫描框）等宽。
-    private int textLocation;//提示文字位于相机镜头（或扫描框）上方（或下方）
-    private int textVerticalMargin;//提示文字与相机镜头（或扫描框）的间距
+    private boolean textMathParent;//提示文字是否填充父View的宽度。true与View等宽，false与相机镜头等宽。
+    private int textLocation;//提示文字位于相机镜头上方（或下方）
+    private int textVerticalMargin;//提示文字与相机镜头的间距
     private int textLeftMargin;//提示文字与View（或相机镜头或扫描框）的左间距
     private int textRightMargin;//提示文字与View（或相机镜头或扫描框）的右间距
 
@@ -129,14 +129,27 @@ public class CameraLensView extends View {
                 cameraLensBitmap = BitmapFactory.decodeResource(getResources(), resId);
         }
 
-        cameraLensSizeRatio = a.getFloat(R.styleable.CameraLensView_clvCameraLensSizeRatio, .5f);
-        if (cameraLensSizeRatio < .3f)
-            cameraLensSizeRatio = .3f;
-        if (cameraLensSizeRatio > 1.0f)
-            cameraLensSizeRatio = 1.0f;
-        cameraLensWidth = a.getDimensionPixelSize(R.styleable.CameraLensView_clvCameraLensWidth, -1);
-        cameraLensHeight = a.getDimensionPixelSize(R.styleable.CameraLensView_clvCameraLensHeight, -1);
+        if (a.hasValue(R.styleable.CameraLensView_clvCameraLensSizeRatio)) {
+            float cameraLensSizeRatio = a.getFloat(R.styleable.CameraLensView_clvCameraLensSizeRatio, 0);
+            if (cameraLensSizeRatio <= 0 || cameraLensSizeRatio >= 1)
+                throw new IllegalArgumentException("The value of clvCameraLensSizeRatio should be (0.0, 1.0).");
+            cameraLensWidthRatio = cameraLensSizeRatio;
+            cameraLensHeightRatio = cameraLensSizeRatio;
+        }
+
         cameraLensGravity = a.getInt(R.styleable.CameraLensView_clvCameraLensGravity, TOP);
+        if (a.hasValue(R.styleable.CameraLensView_clvCameraLensWidthWeight)) {
+            String weightStr = a.getString(R.styleable.CameraLensView_clvCameraLensWidthWeight);
+            cameraLensWidthRatio = explainRatio(weightStr);
+        } else {
+            cameraLensWidth = a.getDimensionPixelSize(R.styleable.CameraLensView_clvCameraLensWidth, 0);
+        }
+        if (a.hasValue(R.styleable.CameraLensView_clvCameraLensHeightWeight)) {
+            String weightStr = a.getString(R.styleable.CameraLensView_clvCameraLensHeightWeight);
+            cameraLensHeightRatio = explainRatio(weightStr);
+        } else {
+            cameraLensHeight = a.getDimensionPixelSize(R.styleable.CameraLensView_clvCameraLensHeight, 0);
+        }
 
         cameraLensShape = a.getInt(R.styleable.CameraLensView_clvCameraLensShape, RECTANGLE);
         boxBorderColor = a.getColor(R.styleable.CameraLensView_clvBoxBorderColor, 0x99FFFFFF);
@@ -164,15 +177,30 @@ public class CameraLensView extends View {
         textPaint.setTextSize(textSize);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    private float explainRatio(String floatString) {
+        floatString = floatString == null ? "" : floatString.trim();
+        floatString = floatString.replace("{", "");
+        floatString = floatString.replace("}", "");
+        String[] weightSplits = floatString.split(",");
+        if (weightSplits.length != 2) {
+            throw new IllegalArgumentException("The clvCameraLensWidthWight's value should like this:{5.0, 3.0}.");
+        }
+        try {
+            float value1 = Float.parseFloat(weightSplits[0]);
+            float value2 = Float.parseFloat(weightSplits[1]);
+            if (value1 * value2 == 0)
+                throw new IllegalArgumentException("The clvCameraLensWidthWight's values must be more chan zero.");
+            return value1 < value2 ? value1 / value2 : value2 / value1;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid values.");
+        }
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        initCameraLensSize(w, h);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        textStaticLayout = null;
+        initCameraLensSize(getMeasuredWidth(), getMeasuredHeight());
     }
 
     @Override
@@ -297,51 +325,35 @@ public class CameraLensView extends View {
     }
 
     private void initCameraLensSize(int w, int h) {
-        Log.i(TAG, "initCameraLensSize: ");
+        if (cameraLensWidthRatio > 0) {
+            cameraLensWidth = (int) (w * cameraLensWidthRatio);
+        }
+        if (cameraLensHeightRatio > 0) {
+            cameraLensHeight = (int) (h * cameraLensHeightRatio);
+        }
+        if (cameraLensWidth <= 0) {
+            cameraLensWidth = cameraLensHeight > 0 ? cameraLensHeight : w / 2;
+        }
+        if (cameraLensHeight <= 0) {
+            cameraLensHeight = cameraLensWidth > 0 ? cameraLensWidth : w / 2;
+        }
+
         switch (cameraLensGravity) {
             case TOP:
-                if (cameraLensWidth > 0 && cameraLensHeight > 0) {
-                    cameraLensRect.left = (w - cameraLensWidth) / 2;
-                    cameraLensRect.top = cameraLensTopMargin;
-                    cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
-                    cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
-                } else {
-                    int cameraLensSize = (int) (w * cameraLensSizeRatio);
-                    cameraLensRect.left = (w - cameraLensSize) / 2;
-                    cameraLensRect.top = cameraLensTopMargin;
-                    cameraLensRect.right = cameraLensRect.left + cameraLensSize;
-                    cameraLensRect.bottom = cameraLensRect.top + cameraLensSize;
-                }
+                cameraLensRect.left = (w - cameraLensWidth) / 2;
+                cameraLensRect.top = cameraLensTopMargin;
                 break;
             case CENTER:
-                if (cameraLensWidth > 0 && cameraLensHeight > 0) {
-                    cameraLensRect.left = (w - cameraLensWidth) / 2;
-                    cameraLensRect.top = (h - cameraLensHeight) / 2 + cameraLensTopMargin;
-                    cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
-                    cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
-                } else {
-                    int cameraLensSize = (int) (w * cameraLensSizeRatio);
-                    cameraLensRect.left = (w - cameraLensSize) / 2;
-                    cameraLensRect.top = (h - cameraLensSize) / 2 + cameraLensTopMargin;
-                    cameraLensRect.right = cameraLensRect.left + cameraLensSize;
-                    cameraLensRect.bottom = cameraLensRect.top + cameraLensSize;
-                }
+                cameraLensRect.left = (w - cameraLensWidth) / 2;
+                cameraLensRect.top = (h - cameraLensHeight) / 2 + cameraLensTopMargin;
                 break;
             case BOTTOM:
-                if (cameraLensWidth > 0 && cameraLensHeight > 0) {
-                    cameraLensRect.left = (w - cameraLensWidth) / 2;
-                    cameraLensRect.top = h - cameraLensHeight + cameraLensTopMargin;
-                    cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
-                    cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
-                } else {
-                    int cameraLensSize = (int) (w * cameraLensSizeRatio);
-                    cameraLensRect.left = (w - cameraLensSize) / 2;
-                    cameraLensRect.top = h - cameraLensSize + cameraLensTopMargin;
-                    cameraLensRect.right = cameraLensRect.left + cameraLensSize;
-                    cameraLensRect.bottom = cameraLensRect.top + cameraLensSize;
-                }
+                cameraLensRect.left = (w - cameraLensWidth) / 2;
+                cameraLensRect.top = h - cameraLensHeight + cameraLensTopMargin;
                 break;
         }
+        cameraLensRect.right = cameraLensRect.left + cameraLensWidth;
+        cameraLensRect.bottom = cameraLensRect.top + cameraLensHeight;
         switch (cameraLensShape) {
             case RECTANGLE:
                 break;
@@ -355,7 +367,7 @@ public class CameraLensView extends View {
                 cameraLensRect.set(left, top, left + max, top + max);
                 break;
         }
-        updateStaticLayout();
+        updateStaticLayout(w);
 
         if (initCameraLensCallBack != null)
             initCameraLensCallBack.onFinishInitialize(cameraLensRect);
@@ -392,17 +404,17 @@ public class CameraLensView extends View {
     }
 
     private void executeInvalidateDelay() {
-        updateStaticLayout();
+        updateStaticLayout(getMeasuredWidth());
         invalidate();
     }
 
-    private void updateStaticLayout() {
+    private void updateStaticLayout(int w) {
         if (text == null || text.trim().length() == 0) {
             textStaticLayout = null;
             return;
         }
         if (textStaticLayout == null) {
-            int textWidth = textMathParent ? getWidth() : cameraLensRect.width();
+            int textWidth = textMathParent ? w : cameraLensRect.width();
             textWidth = textWidth - textLeftMargin - textRightMargin;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 textStaticLayout = StaticLayout.Builder.obtain(text, 0, text.length(), textPaint, textWidth)
@@ -519,12 +531,28 @@ public class CameraLensView extends View {
         executeInvalidateDelay();
     }
 
+    @Deprecated
     public float getCameraLensSizeRatio() {
-        return cameraLensSizeRatio;
+        return 0.0f;
     }
 
-    public void setCameraLensSizeRatio(@FloatRange(from = 0.0, to = 1.0) float cameraLensSizeRatio) {
-        this.cameraLensSizeRatio = cameraLensSizeRatio;
+    public void setCameraLensSizeRatio(float cameraLensSizeRatio) {
+        if (cameraLensSizeRatio <= 0 || cameraLensSizeRatio >= 1)
+            throw new IllegalArgumentException("The value of cameraLensSizeRatio should be (0.0, 1.0).");
+        cameraLensWidthRatio = cameraLensSizeRatio;
+        cameraLensHeightRatio = cameraLensSizeRatio;
+        cameraLensWidth = 0;
+        cameraLensHeight = 0;
+        requestLayout();
+    }
+
+    public void setCameraLensSize(int width, int height) {
+        if (width <= 0 || height <= 0)
+            throw new IllegalArgumentException("width and height must be more chan zero.");
+        cameraLensWidthRatio = 0;
+        cameraLensHeightRatio = 0;
+        cameraLensWidth = width;
+        cameraLensHeight = height;
         requestLayout();
     }
 
@@ -596,6 +624,7 @@ public class CameraLensView extends View {
 
         /**
          * Call back when camera lens location was initialized.
+         *
          * @param rect camera lens rect
          */
         void onFinishInitialize(@NonNull Rect rect);

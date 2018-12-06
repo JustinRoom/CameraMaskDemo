@@ -33,6 +33,8 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 | 名称 | 类型 | 描述 |
 |:---|:---|:---|
 |`clvCameraLensSizeRatio`|float|相机镜头（或扫描框）大小占View宽度的百分比|
+|`clvCameraLensWidthWeight`|string,例如:`{1.5,4}`|相机镜头（或扫描框）宽度比重|
+|`clvCameraLensHeightWeight`|string,例如:`{1.5,4}`|相机镜头（或扫描框）高度比重|
 |`clvCameraLensWidth`|dimension|相机镜头（或扫描框）宽度|
 |`clvCameraLensHeight`|dimension|相机镜头（或扫描框）高度|
 |`clvCameraLensGravity`|enum(`top`、`center`、`bottom`)|相机镜头（或扫描框）位置|
@@ -70,6 +72,54 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 |`scannerBarView`|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)|[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)所有属性|
 
 ### 3、usage
++ 3.1、[CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java):
+`{1.5,4}`好比LinearLayout的`weightSum`=4, 其中相机镜头所占比重为1.5
+```
+    <jsc.kit.cameramask.CameraLensView
+        android:id="@+id/camera_lens_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:clvCameraLensGravity="top"
+        app:clvCameraLensHeight="48dp"
+        app:clvCameraLensWidth="64dp"
+        app:clvCameraLensWidthWeight="{1.5,4}"
+        app:clvCameraLensHeightWeight="{1.5,4}"
+        app:clvCameraLensShape="rectangle"
+        app:clvCameraLensTopMargin="@dimen/space_32"
+        app:clvShowBoxAngle="true"
+        app:clvText="Put QR code inside camera lens please."
+        app:clvTextLocation="belowCameraLens"
+        app:clvTextMathParent="true"
+        app:clvTextSize="14sp"
+        app:clvTextVerticalMargin="8dp" />
+```
+
++ 3.2、[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java):
+```
+    <jsc.kit.cameramask.ScannerBarView
+        android:id="@+id/scanner_view"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_32"
+        app:svbSrc="drawable图片资源"
+        android:background="#f2f2f2" />
+```
+
++ 3.3、[CameraScannerMaskView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraScannerMaskView.java):
+```
+    <jsc.kit.cameramask.CameraScannerMaskView
+        android:id="@+id/camera_scanner_mask_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:clvCameraLensWidthWeight="{1.5, 4}"
+        app:clvCameraLensHeight="96dp"
+        app:clvCameraLensHeightWeight="{2, 5}"
+        app:clvCameraLensTopMargin="64dp"
+        app:clvText="Put QR code inside camera lens please."
+        app:clvTextVerticalMargin="16dp" />
+```
+
 | 组件 | 使用示例 |
 |:---|:---|
 |[ScannerBarView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/ScannerBarView.java)|[ScannerBarViewFragment](/app/src/main/java/jsc/exam/com/cameramask/fragments/ScannerBarViewFragment.java)|
@@ -93,6 +143,12 @@ compile 'jsc.kit.cameramask:camera-mask:_latestVersion'
 ![CameraScannerMaskView](/output/shots/camera_scanner_mask_view_s.png)
 
 ### 5、release log
+
+##### version:0.3.0
++ 1、fix bugs
++ 2、optimize CameraLensView, add attrs:  
+clvCameraLensWidthWeight：相机镜头宽度比重,例如:{1.5,4}  
+clvCameraLensHeightWeight：相机镜头高度比重,例如:`{5,2}
 
 ##### version:0.2.1
 + 1、optimize [CameraLensView](/cameraMaskLibrary/src/main/java/jsc/kit/cameramask/CameraLensView.java), add attrs:  
